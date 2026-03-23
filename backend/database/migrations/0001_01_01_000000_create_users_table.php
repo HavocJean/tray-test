@@ -14,14 +14,15 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('cpf')->nullable()->index();
+            $table->date('birth_date')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();
             $table->string('google_id')->nullable()->index();
             $table->text('google_token')->nullable();
-            $table->string('cpf')->nullable()->index();
-            $table->date('birth_date')->nullable();
+            $table->uuid('api_token')->nullable()->unique();
             $table->timestamps();
         });
 

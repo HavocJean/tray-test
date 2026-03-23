@@ -39,9 +39,7 @@ class AuthController
         $user = $userService->handleGoogleLogin($dto);
 
         return response()->json([
-            'user' => [
-                'id' => $user->id,
-            ],
+            'token' => $user->api_token,
         ]);
     }
 }

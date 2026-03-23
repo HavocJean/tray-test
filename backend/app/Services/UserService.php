@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTOs\GoogleUserDTO;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Str;
 
 class UserService
 {
@@ -12,6 +13,9 @@ class UserService
 
     public function handleGoogleLogin(GoogleUserDTO $dto): User
     {
-        return $this->userRepository->createOrUpdateGoogleUser($dto);
+        return $this->userRepository->createOrUpdateGoogleUser(
+            $dto,
+            (string) Str::uuid()
+        );
     }
 }

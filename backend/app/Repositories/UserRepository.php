@@ -12,7 +12,7 @@ class UserRepository
         return User::where('google_id', $googleId)->first();
     }
 
-    public function createOrUpdateGoogleUser(GoogleUserDTO $dto): User
+    public function createOrUpdateGoogleUser(GoogleUserDTO $dto, string $apiToken): User
     {
         return User::updateOrCreate(
             [
@@ -21,7 +21,13 @@ class UserRepository
             [
                 'email' => $dto->email,
                 'google_token' => $dto->token,
+                'api_token' => $apiToken,
             ]
         );
+    }
+
+    public function findByApiToken(string $token): ?User
+    {
+        return User::where('api_token', $token)->first();
     }
 }
