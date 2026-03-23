@@ -1,0 +1,54 @@
+services:
+  app:
+    build:
+      context: ./docker/php
+    container_name: tray_app
+    volumes:
+      - ./backend:/var/www/backend
+    working_dir: /var/www/backend
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - tray-network
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: tray_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend:/var/www/backend
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - tray-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: tray_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: tray_test
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3306:3306"
+    volumes:
+      - tray_mysql_data:/var/lib/mysql
+    networks:
+      - tray-network
+
+  redis:
+    image: redis:alpine
+    container_name: tray_redis
+    networks:
+      - tray-network
+
+volumes:
+  tray_mysql_data:
+
+networks:
+  tray-network:
