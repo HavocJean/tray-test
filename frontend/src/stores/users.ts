@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, reactive, watch } from 'vue'
 import { fetchUsers } from '@/services/users'
+import { getApiErrorMessage } from '@/utils/error'
 import type { User, PaginationMeta } from '@/types/user'
 
 export const useUsersStore = defineStore('users', () => {
@@ -32,8 +33,8 @@ export const useUsersStore = defineStore('users', () => {
             })
             users.value = res.data
             meta.value = res.meta
-        } catch (e: any) {
-            error.value = e.response?.data?.message ?? 'Erro ao carregar usuários.'
+        } catch (e: unknown) {
+            error.value = getApiErrorMessage(e, 'Erro ao carregar usuários.')
         } finally {
             loading.value = false
         }

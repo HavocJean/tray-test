@@ -55,6 +55,8 @@
     import { reactive } from 'vue'
     import { useRouter } from 'vue-router'
     import { useAuthStore } from '@/stores/auth'
+    import { formatCpfInput } from '@/utils/formatters'
+    import { getValidationErrors } from '@/utils/error'
 
     const auth = useAuthStore()
     const router = useRouter()
@@ -65,23 +67,21 @@
         birth_date: '',
     })
 
-    const errors = reactive<Record<string, string>>({
+    interface RegistrationFormErrors {
+        name: string
+        cpf: string
+        birth_date: string
+    }
+
+    const errors = reactive<RegistrationFormErrors>({
         name: '',
         cpf: '',
         birth_date: '',
     })
 
-    function formatCpf(value: string): string {
-        const digits = value.replace(/\D/g, '').slice(0, 11)
-        if (digits.length <= 3) return digits
-        if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`
-        if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`
-        return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`
-    }
-
     function onCpfInput(e: Event) {
         const input = e.target as HTMLInputElement
-        form.cpf = formatCpf(input.value)
+        form.cpf = formatCpfInput(input.value)
     }
 
     function validate(): boolean {
@@ -119,12 +119,12 @@
                 birth_date: form.birth_date,
             })
             router.replace({ name: 'users' })
-        } catch (e: any) {
-            const serverErrors: Record<string, string[]> | undefined = e.response?.data?.errors
+        } catch (e: unknown) {
+            const serverErrors = getValidationErrors(e)
             if (serverErrors) {
                 for (const [field, msgs] of Object.entries(serverErrors)) {
                     if (field in errors) {
-                        errors[field] = msgs[0]
+                        (errors as Record<string, string>)[field] = msgs[0]
                     }
                 }
             }

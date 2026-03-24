@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { fetchGoogleAuthUrl, exchangeGoogleCode, completeRegistration } from '@/services/auth'
+import { getApiErrorMessage } from '@/utils/error'
 import type { CompleteRegistrationPayload, User } from '@/types/user'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -74,8 +75,8 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             const newToken = await openGooglePopup()
             setToken(newToken)
-        } catch (e: any) {
-            error.value = e.message ?? 'Erro ao autenticar com Google.'
+        } catch (e: unknown) {
+            error.value = getApiErrorMessage(e, 'Erro ao autenticar com Google.')
         } finally {
             loading.value = false
         }
@@ -88,8 +89,8 @@ export const useAuthStore = defineStore('auth', () => {
             const newToken = await exchangeGoogleCode(code)
             setToken(newToken)
             return newToken
-        } catch (e: any) {
-            error.value = e.response?.data?.message ?? 'Erro ao autenticar com Google.'
+        } catch (e: unknown) {
+            error.value = getApiErrorMessage(e, 'Erro ao autenticar com Google.')
             throw e
         } finally {
             loading.value = false
@@ -102,8 +103,8 @@ export const useAuthStore = defineStore('auth', () => {
         error.value = null
         try {
             user.value = await completeRegistration({ ...payload, token: token.value })
-        } catch (e: any) {
-            error.value = e.response?.data?.message ?? 'Erro ao completar cadastro.'
+        } catch (e: unknown) {
+            error.value = getApiErrorMessage(e, 'Erro ao completar cadastro.')
             throw e
         } finally {
             loading.value = false

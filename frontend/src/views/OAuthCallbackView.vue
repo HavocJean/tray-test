@@ -11,6 +11,7 @@
     import { ref, onMounted } from 'vue'
     import { useRoute } from 'vue-router'
     import { exchangeGoogleCode } from '@/services/auth'
+    import { getApiErrorMessage } from '@/utils/error'
 
     const route = useRoute()
     const processing = ref(true)
@@ -29,8 +30,8 @@
         try {
             const token = await exchangeGoogleCode(code)
             notifyParent({ type: 'oauth-success', token })
-        } catch (e: any) {
-            errorMsg.value = e.response?.data?.message ?? 'Erro ao autenticar com Google.'
+        } catch (e: unknown) {
+            errorMsg.value = getApiErrorMessage(e, 'Erro ao autenticar com Google.')
             notifyParent({ type: 'oauth-error', message: errorMsg.value })
         } finally {
             processing.value = false

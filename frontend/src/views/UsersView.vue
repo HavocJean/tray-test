@@ -1,7 +1,7 @@
 <template>
     <div class="users-page">
         <header class="users-header">
-            <h1>Usuários</h1>
+            <h1>Lista de Usuários</h1>
             <button class="btn-logout" @click="logout">Sair</button>
         </header>
 
@@ -39,20 +39,13 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsersStore } from '@/stores/users'
 import { useAuthStore } from '@/stores/auth'
+import { formatCpfInput } from '@/utils/formatters'
 import UserTable from '@/components/UserTable.vue'
 import PaginationControls from '@/components/PaginationControls.vue'
 
 const store = useUsersStore()
 const auth = useAuthStore()
 const router = useRouter()
-
-function formatCpfInput(value: string): string {
-    const digits = value.replace(/\D/g, '').slice(0, 11)
-    if (digits.length <= 3) return digits
-    if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`
-    if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`
-    return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`
-}
 
 function onCpfInput(e: Event) {
     const input = e.target as HTMLInputElement
