@@ -26,7 +26,7 @@
             </div>
 
             <div class="social-row">
-                <GoogleSignInButton :disabled="auth.loading" @click="auth.redirectToGoogle()" />
+                <GoogleSignInButton :disabled="auth.loading" @click="handleGoogleLogin" />
             </div>
 
             <p class="signup-text">
@@ -37,10 +37,19 @@
 </template>
 
 <script setup lang="ts">
+    import { useRouter } from 'vue-router'
     import { useAuthStore } from '@/stores/auth'
     import GoogleSignInButton from '@/components/GoogleSignInButton.vue'
 
     const auth = useAuthStore()
+    const router = useRouter()
+
+    async function handleGoogleLogin() {
+        await auth.loginWithGoogle()
+        if (auth.isAuthenticated) {
+            router.push({ name: 'register' })
+        }
+    }
 </script>
 
 <style scoped lang="scss">

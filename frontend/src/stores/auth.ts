@@ -23,14 +23,60 @@ export const useAuthStore = defineStore('auth', () => {
         localStorage.removeItem('token')
     }
 
-    async function redirectToGoogle() {
+    function openGooglePopup(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            fetchGoogleAuthUrl().then((url) => {
+                const w = 500
+                const h = 600
+                const left = window.screenX + (window.outerWidth - w) / 2
+                const top = window.screenY + (window.outerHeight - h) / 2
+                const popup = window.open(
+                    url,
+                    'google-login',
+                    `width=${w},height=${h},left=${left},top=${top},popup=yes`
+                )
+
+                if (!popup) {
+                    reject(new Error('Popup bloqueado pelo navegador.'))
+                    return
+                }
+
+                const onMessage = (event: MessageEvent) => {
+                    if (event.origin !== window.location.origin) return
+                    if (event.data?.type === 'oauth-success' && event.data.token) {
+                        window.removeEventListener('message', onMessage)
+                        clearInterval(pollTimer)
+                        resolve(event.data.token)
+                    }
+                    if (event.data?.type === 'oauth-error') {
+                        window.removeEventListener('message', onMessage)
+                        clearInterval(pollTimer)
+                        reject(new Error(event.data.message ?? 'Erro na autenticação.'))
+                    }
+                }
+
+                const pollTimer = setInterval(() => {
+                    if (popup.closed) {
+                        clearInterval(pollTimer)
+                        window.removeEventListener('message', onMessage)
+                        reject(new Error('Popup fechado antes de concluir.'))
+                    }
+                }, 500)
+
+                window.addEventListener('message', onMessage)
+            }).catch(reject)
+        })
+    }
+
+    async function loginWithGoogle() {
         loading.value = true
         error.value = null
         try {
-            const url = await fetchGoogleAuthUrl()
-            window.location.href = url
+            const newToken = await openGooglePopup()
+            setToken(newToken)
         } catch (e: any) {
-            error.value = e.response?.data?.message ?? 'Erro ao conectar com Google.'
+            error.value = e.message ?? 'Erro ao autenticar com Google.'
+        } finally {
             loading.value = false
         }
     }
@@ -41,8 +87,10 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             const newToken = await exchangeGoogleCode(code)
             setToken(newToken)
+            return newToken
         } catch (e: any) {
             error.value = e.response?.data?.message ?? 'Erro ao autenticar com Google.'
+            throw e
         } finally {
             loading.value = false
         }
@@ -66,6 +114,6 @@ export const useAuthStore = defineStore('auth', () => {
         token, user, loading, error,
         isAuthenticated, needsRegistration,
         setToken, clearAuth,
-        redirectToGoogle, handleGoogleCallback, submitRegistration,
+        loginWithGoogle, handleGoogleCallback, submitRegistration,
     }
 })
