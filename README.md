@@ -60,6 +60,21 @@ docker compose exec app php artisan migrate
 
 ---
 
+## Rodar o Frontend (Vue)
+
+No diretório `frontend/`:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+- App local: `http://localhost:5173`
+- O frontend deve apontar para a API em `http://localhost:8000`
+
+---
+
 ## Fila (Redis) e e-mail após cadastro
 
 O envio de e-mail de “cadastro concluído” roda em **fila** (`QUEUE_CONNECTION=redis`).
@@ -145,3 +160,4 @@ tray-test/
 - **Service + Repository** para regras e persistência.
 - **Fila Redis** para e-mail pós-cadastro, para envio assíncrono.
 - **Filtros** com índices em `name` e `cpf` e paginação obrigatória para suportar grande volume de dados.
+- **Login** criado uma fake página de login apenas para ficar mais visual, o que foi desenvolvido é apenas o login com o google
