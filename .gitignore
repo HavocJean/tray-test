@@ -33,13 +33,26 @@ backend/Homestead.yaml
 backend/Homestead.json
 backend/.vagrant/
 
-# Frontend (Vue)
+# Frontend (Vue / Vite)
 frontend/node_modules/
 frontend/dist/
+frontend/dist-ssr/
+frontend/logs/
 frontend/.env
 frontend/.env.*
+frontend/*.local
 
 # Logs
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 *.log
+
+# Editor / OS extras
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
