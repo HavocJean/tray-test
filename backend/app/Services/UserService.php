@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTOs\CompleteRegistrationDTO;
 use App\DTOs\GoogleUserDTO;
 use App\DTOs\UserFilterDTO;
+use App\Jobs\SendRegistrationCompletedEmail;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -31,7 +32,11 @@ class UserService
             throw new ModelNotFoundException('Usuário não encontrado para o token informado.');
         }
 
-        return $this->userRepository->completeRegistration($user, $dto);
+        $user = $this->userRepository->completeRegistration($user, $dto);
+
+        SendRegistrationCompletedEmail::dispatch($user->id);
+
+        return $user;
     }
 
     public function listUsers(UserFilterDTO $filters): LengthAwarePaginator

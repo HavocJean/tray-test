@@ -5,7 +5,9 @@ namespace App\Services;
 use App\DTOs\GoogleUserDTO;
 use Google\Client;
 use Google\Service\Oauth2;
+use Illuminate\Support\Facades\Log;
 use RuntimeException;
+use Throwable;
 
 class GoogleService
 {
@@ -20,6 +22,7 @@ class GoogleService
             'email',
             'profile',
         ]);
+        $client->setAccessType('offline');
 
         return $client;
     }
@@ -55,5 +58,39 @@ class GoogleService
             email: $googleUser->email,
             token: $token
         );
+    }
+
+    public function getEmailFromStoredToken(?array $token): ?string
+    {
+        if ($token === null || $token === []) {
+            return null;
+        }
+
+        try {
+            $client = $this->getClient();
+            $client->setAccessToken($token);
+
+            if ($client->isAccessTokenExpired()) {
+                $refresh = $client->getRefreshToken();
+                if ($refresh !== null) {
+                    $client->fetchAccessTokenWithRefreshToken($refresh);
+                }
+            }
+
+            if ($client->isAccessTokenExpired()) {
+                Log::warning('Google OAuth: access token expirado e sem refresh.');
+
+                return null;
+            }
+
+            $oauth = new Oauth2($client);
+            $googleUser = $oauth->userinfo->get();
+
+            return $googleUser->email ?? null;
+        } catch (Throwable $e) {
+            Log::warning('Google user info error: ', ['message' => $e->getMessage()]);
+
+            return null;
+        }
     }
 }

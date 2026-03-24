@@ -47,6 +47,20 @@ services:
     networks:
       - tray-network
 
+  queue:
+    build:
+      context: ./docker/php
+    container_name: tray_queue
+    command: php artisan queue:work redis --sleep=1 --tries=3 --max-time=3600
+    volumes:
+      - ./backend:/var/www/backend
+    working_dir: /var/www/backend
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - tray-network
+
 volumes:
   tray_mysql_data:
 
