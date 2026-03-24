@@ -54,9 +54,9 @@
 
 <style scoped lang="scss">
     .login-card {
-        background: #fff;
-        border: 1px solid #e0e0e0;
-        border-radius: 16px;
+        background: $color-white;
+        border: 1px solid $color-border-light;
+        border-radius: $border-radius-lg;
         padding: 2.5rem 2.5rem 2rem;
         width: 100%;
         max-width: 440px;
@@ -66,13 +66,13 @@
     .login-title {
         font-size: 1.75rem;
         font-weight: 600;
-        color: #1a1a2e;
+        color: $color-heading;
         margin-bottom: 0.25rem;
     }
 
     .login-subtitle {
         font-size: 0.9rem;
-        color: #7c7c8a;
+        color: $color-muted;
         margin-bottom: 2rem;
     }
 
@@ -86,18 +86,18 @@
         width: 100%;
         padding: 0.75rem 1rem;
         font-size: 0.95rem;
-        border: 1px solid #dadce0;
-        border-radius: 8px;
+        border: 1px solid $color-border;
+        border-radius: $border-radius;
         outline: none;
         transition: border-color 0.2s;
-        color: #202124;
+        color: $color-text;
 
         &::placeholder {
-            color: #9aa0a6;
+            color: $color-placeholder;
         }
 
         &:focus {
-            border-color: #7c3aed;
+            border-color: $color-accent;
         }
     }
 
@@ -112,16 +112,16 @@
         display: flex;
         align-items: center;
         gap: 0.35rem;
-        color: #5f6368;
+        color: $color-text-secondary;
         cursor: pointer;
 
         input {
-            accent-color: #7c3aed;
+            accent-color: $color-accent;
         }
     }
 
     .forgot-link {
-        color: #7c3aed;
+        color: $color-accent;
         text-decoration: none;
         font-weight: 500;
 
@@ -135,10 +135,10 @@
         padding: 0.75rem;
         font-size: 0.95rem;
         font-weight: 600;
-        color: #fff;
-        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        color: $color-white;
+        background: linear-gradient(135deg, $color-accent, $color-accent-light);
         border: none;
-        border-radius: 8px;
+        border-radius: $border-radius;
         cursor: pointer;
         transition: opacity 0.2s;
         margin-top: 0.25rem;
@@ -159,12 +159,12 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: #dadce0;
+            background: $color-border;
         }
 
         span {
             font-size: 0.8rem;
-            color: #9aa0a6;
+            color: $color-placeholder;
         }
     }
 
@@ -176,11 +176,11 @@
     .signup-text {
         margin-top: 1.5rem;
         font-size: 0.8rem;
-        color: #7c7c8a;
+        color: $color-muted;
     }
 
     .signup-link {
-        color: #7c3aed;
+        color: $color-accent;
         text-decoration: none;
         font-weight: 500;
 

@@ -87,22 +87,22 @@
         padding: 0 0.5rem;
         font-size: 0.85rem;
         font-weight: 500;
-        color: #5f6368;
-        background: #fff;
-        border: 1px solid #dadce0;
-        border-radius: 8px;
+        color: $color-text-secondary;
+        background: $color-white;
+        border: 1px solid $color-border;
+        border-radius: $border-radius;
         cursor: pointer;
         transition: all 0.15s;
 
         &:hover:not(:disabled):not(.active) {
-            border-color: #7c3aed;
-            color: #7c3aed;
+            border-color: $color-accent;
+            color: $color-accent;
         }
 
         &.active {
-            background: #7c3aed;
-            border-color: #7c3aed;
-            color: #fff;
+            background: $color-accent;
+            border-color: $color-accent;
+            color: $color-white;
         }
 
         &:disabled {
@@ -123,14 +123,14 @@
         min-width: 36px;
         height: 36px;
         font-size: 0.85rem;
-        color: #9aa0a6;
+        color: $color-placeholder;
         user-select: none;
     }
 
     .page-total {
         text-align: center;
         font-size: 0.8rem;
-        color: #9aa0a6;
+        color: $color-placeholder;
         margin-top: 0.8rem;
         width: 100%;
     }

@@ -79,7 +79,7 @@ onMounted(() => {
     h1 {
         font-size: 1.5rem;
         font-weight: 600;
-        color: #1a1a2e;
+        color: $color-heading;
     }
 }
 
@@ -87,16 +87,16 @@ onMounted(() => {
     padding: 0.5rem 1.25rem;
     font-size: 0.8rem;
     font-weight: 500;
-    border: 1px solid #dadce0;
-    border-radius: 8px;
-    background: #fff;
+    border: 1px solid $color-border;
+    border-radius: $border-radius;
+    background: $color-white;
     cursor: pointer;
-    color: #7c3aed;
+    color: $color-accent;
     transition: all 0.15s;
 
     &:hover {
-        border-color: #7c3aed;
-        background: #f5f3ff;
+        border-color: $color-accent;
+        background: $color-accent-bg;
     }
 }
 
@@ -110,18 +110,18 @@ onMounted(() => {
     flex: 1;
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
-    border: 1px solid #dadce0;
-    border-radius: 8px;
+    border: 1px solid $color-border;
+    border-radius: $border-radius;
     outline: none;
     transition: border-color 0.2s;
-    color: #202124;
+    color: $color-text;
 
     &::placeholder {
-        color: #9aa0a6;
+        color: $color-placeholder;
     }
 
     &:focus {
-        border-color: #7c3aed;
+        border-color: $color-accent;
     }
 }
 
@@ -130,16 +130,16 @@ onMounted(() => {
 }
 
 .table-card {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 16px;
+    background: $color-white;
+    border: 1px solid $color-border-light;
+    border-radius: $border-radius-lg;
     padding: 1.25rem;
     min-height: 200px;
 }
 
 .loading {
     text-align: center;
-    color: #9aa0a6;
+    color: $color-placeholder;
     padding: 3rem;
     font-size: 0.9rem;
 }

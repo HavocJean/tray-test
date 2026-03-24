@@ -18,6 +18,13 @@ export default defineConfig({
             },
         },
     },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                additionalData: `@use "@/assets/styles/variables" as *;\n`,
+            },
+        },
+    },
     test: {
         environment: 'happy-dom',
         globals: true,

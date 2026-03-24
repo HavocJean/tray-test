@@ -44,34 +44,34 @@
         th, td {
             text-align: left;
             padding: 0.75rem 1rem;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid $color-border-lighter;
             white-space: nowrap;
         }
 
         th {
             font-weight: 600;
             font-size: 0.8rem;
-            color: #7c7c8a;
+            color: $color-muted;
             text-transform: uppercase;
             letter-spacing: 0.03em;
             background: transparent;
         }
 
         td {
-            color: #202124;
+            color: $color-text;
         }
 
         tbody tr {
             transition: background-color 0.1s;
 
             &:hover td {
-                background: #f5f3ff;
+                background: $color-accent-bg;
             }
         }
 
         .empty {
             text-align: center;
-            color: #9aa0a6;
+            color: $color-placeholder;
             padding: 2.5rem;
             font-style: italic;
         }
