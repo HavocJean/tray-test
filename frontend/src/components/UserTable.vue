@@ -55,27 +55,37 @@
 
         th, td {
             text-align: left;
-            padding: 0.625rem 0.75rem;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
             white-space: nowrap;
         }
 
         th {
             font-weight: 600;
-            color: #5f6368;
-            background: #fafafa;
-            position: sticky;
-            top: 0;
+            font-size: 0.8rem;
+            color: #7c7c8a;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            background: transparent;
         }
 
-        tr:hover td {
-            background: #f5f5f5;
+        td {
+            color: #202124;
+        }
+
+        tbody tr {
+            transition: background-color 0.1s;
+
+            &:hover td {
+                background: #f5f3ff;
+            }
         }
 
         .empty {
             text-align: center;
             color: #9aa0a6;
-            padding: 2rem;
+            padding: 2.5rem;
+            font-style: italic;
         }
     }
 </style>

@@ -72,9 +72,9 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .users-page {
-    max-width: 900px;
+    max-width: 960px;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: 2rem 1.5rem;
 }
 
 .users-header {
@@ -91,34 +91,41 @@ onMounted(() => {
 }
 
 .btn-logout {
-    padding: 0.4rem 1rem;
+    padding: 0.5rem 1.25rem;
     font-size: 0.8rem;
+    font-weight: 500;
     border: 1px solid #dadce0;
-    border-radius: 4px;
+    border-radius: 8px;
     background: #fff;
     cursor: pointer;
-    color: #5f6368;
-    transition: background-color 0.15s;
+    color: #7c3aed;
+    transition: all 0.15s;
 
     &:hover {
-        background: #f5f5f5;
+        border-color: #7c3aed;
+        background: #f5f3ff;
     }
 }
 
 .filters {
     display: flex;
     gap: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .filter-input {
     flex: 1;
-    padding: 0.625rem 0.75rem;
+    padding: 0.75rem 1rem;
     font-size: 0.875rem;
     border: 1px solid #dadce0;
-    border-radius: 6px;
+    border-radius: 8px;
     outline: none;
     transition: border-color 0.2s;
+    color: #202124;
+
+    &::placeholder {
+        color: #9aa0a6;
+    }
 
     &:focus {
         border-color: #7c3aed;
@@ -126,14 +133,14 @@ onMounted(() => {
 }
 
 .filter-cpf {
-    max-width: 200px;
+    max-width: 220px;
 }
 
 .table-card {
     background: #fff;
     border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 1rem;
+    border-radius: 16px;
+    padding: 1.25rem;
     min-height: 200px;
 }
 
@@ -141,5 +148,6 @@ onMounted(() => {
     text-align: center;
     color: #9aa0a6;
     padding: 3rem;
+    font-size: 0.9rem;
 }
 </style>

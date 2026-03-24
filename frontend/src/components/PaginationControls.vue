@@ -1,28 +1,71 @@
 <template>
     <div v-if="meta.last_page > 1" class="pagination">
-        <button :disabled="meta.current_page <= 1" @click="$emit('page', meta.current_page - 1)">
-            &laquo; Anterior
+        <button
+            class="page-btn page-arrow"
+            :disabled="meta.current_page <= 1"
+            @click="$emit('page', meta.current_page - 1)"
+        >
+            &lsaquo;
         </button>
 
-        <span class="pagination-info">
-            Página {{ meta.current_page }} de {{ meta.last_page }}
-            <span class="pagination-total">({{ meta.total }} registros)</span>
-        </span>
+        <template v-for="item in pages" :key="item">
+            <span v-if="item === '...'" class="page-ellipsis">...</span>
+            <button
+                v-else
+                class="page-btn"
+                :class="{ active: item === meta.current_page }"
+                @click="$emit('page', item as number)"
+            >
+                {{ item }}
+            </button>
+        </template>
 
-        <button :disabled="meta.current_page >= meta.last_page" @click="$emit('page', meta.current_page + 1)">
-            Próxima &raquo;
+        <button
+            class="page-btn page-arrow"
+            :disabled="meta.current_page >= meta.last_page"
+            @click="$emit('page', meta.current_page + 1)"
+        >
+            &rsaquo;
         </button>
+
     </div>
-    <div v-else class="pagination-info-single">
-        {{ meta.total }} registro{{ meta.total !== 1 ? 's' : '' }}
+    <div class="page-total">
+        {{ meta.total }} resultado{{ meta.total !== 1 ? 's' : '' }}
     </div>
 </template>
 
 <script setup lang="ts">
+    import { computed } from 'vue'
     import type { PaginationMeta } from '@/types/user'
 
-    defineProps<{ meta: PaginationMeta }>()
+    const props = defineProps<{ meta: PaginationMeta }>()
     defineEmits<{ page: [number] }>()
+
+    const pages = computed(() => {
+        const current = props.meta.current_page
+        const last = props.meta.last_page
+        const items: (number | string)[] = []
+
+        if (last <= 7) {
+            for (let i = 1; i <= last; i++) items.push(i)
+            return items
+        }
+
+        items.push(1)
+
+        if (current > 3) items.push('...')
+
+        const start = Math.max(2, current - 1)
+        const end = Math.min(last - 1, current + 1)
+
+        for (let i = start; i <= end; i++) items.push(i)
+
+        if (current < last - 2) items.push('...')
+
+        items.push(last)
+
+        return items
+    })
 </script>
 
 <style scoped lang="scss">
@@ -30,42 +73,65 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 1rem;
-        margin-top: 1rem;
+        gap: 0.35rem;
+        margin-top: 1.25rem;
+        flex-wrap: wrap;
+    }
 
-        button {
-            padding: 0.4rem 0.75rem;
-            font-size: 0.8rem;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            background: #fff;
-            cursor: pointer;
-            transition: background-color 0.15s;
+    .page-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        height: 36px;
+        padding: 0 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #5f6368;
+        background: #fff;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.15s;
 
-            &:hover:not(:disabled) {
-                background: #f5f5f5;
-            }
+        &:hover:not(:disabled):not(.active) {
+            border-color: #7c3aed;
+            color: #7c3aed;
+        }
 
-            &:disabled {
-                opacity: 0.4;
-                cursor: default;
-            }
+        &.active {
+            background: #7c3aed;
+            border-color: #7c3aed;
+            color: #fff;
+        }
+
+        &:disabled {
+            opacity: 0.3;
+            cursor: default;
         }
     }
 
-    .pagination-info {
-        font-size: 0.8rem;
-        color: #5f6368;
+    .page-arrow {
+        font-size: 1.1rem;
+        font-weight: 600;
     }
 
-    .pagination-total {
+    .page-ellipsis {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
         color: #9aa0a6;
+        user-select: none;
     }
 
-    .pagination-info-single {
+    .page-total {
         text-align: center;
         font-size: 0.8rem;
         color: #9aa0a6;
-        margin-top: 0.75rem;
+        margin-top: 0.8rem;
+        width: 100%;
     }
 </style>
