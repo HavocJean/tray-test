@@ -1,6 +1,6 @@
 # Tray Test — Full Stack (Laravel API + Vue)
 
-Monorepo com **API Laravel** (`backend/`), **frontend Vue** (`frontend/`) e **Docker** (PHP-FPM, Nginx, MySQL, Redis).
+Monorepo com **API Laravel** (`backend/`), **frontend Vue** (`frontend/`) e **Docker** (PHP-FPM, Nginx, MySQL, Redis, fila e **Node/Vite** para o frontend).
 
 ---
 
@@ -16,7 +16,7 @@ Monorepo com **API Laravel** (`backend/`), **frontend Vue** (`frontend/`) e **Do
 Na raiz do repositório:
 
 ```bash
-git clone <seu-repositorio>
+git clone https://github.com/HavocJean/tray-test.git
 cd tray-test
 
 docker compose build
@@ -60,9 +60,25 @@ docker compose exec app php artisan migrate
 
 ---
 
-## Rodar o Frontend (Vue)
+## Frontend (Vue) — Docker 
 
-No diretório `frontend/`:
+
+- **URL:** `http://localhost:5173`
+- Chamadas a `/api` no browser são **proxied pelo Vite** para o serviço `nginx` na rede interna (`VITE_API_PROXY=http://nginx:80` no `docker-compose`), sem CORS extra para o fluxo normal.
+
+Logs:
+
+```bash
+docker compose logs -f frontend
+```
+
+Reinstalar dependências após mudar `package.json`:
+
+```bash
+docker compose exec frontend npm install
+```
+
+## Frontend — máquina local (sem container)
 
 ```bash
 cd frontend
@@ -70,8 +86,8 @@ npm install
 npm run dev
 ```
 
-- App local: `http://localhost:5173`
-- O frontend deve apontar para a API em `http://localhost:8000`
+- App: `http://localhost:5173`
+- O proxy do Vite usa por padrão `http://127.0.0.1:8000` (API no host). Opcional: `VITE_API_PROXY=http://127.0.0.1:8000 npm run dev`
 
 ---
 
@@ -130,6 +146,9 @@ docker compose exec app php artisan db:seed --class=LoadTestUserSeeder
 ```bash
 # Logs do worker de fila (container queue)
 docker compose logs -f queue
+
+# Logs do vue (frontend)
+docker compose logs -f frontend
 
 # Shell no PHP
 docker compose exec app bash

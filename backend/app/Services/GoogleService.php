@@ -9,8 +9,20 @@ use Illuminate\Support\Facades\Log;
 use RuntimeException;
 use Throwable;
 
+/**
+ * Integração OAuth2 / userinfo com Google API PHP Client.
+ *
+ * Regras de negócio / integração:
+ * - Credenciais e redirect vêm de `config/services.php` (env), alinhados ao Google Cloud Console.
+ * - Escopos `openid`, `email`, `profile` permitem obter `sub` e e-mail em userinfo.
+ * - `access_type=offline` pede refresh token quando o Google conceder (útil para jobs posteriores).
+ * - O array de token retornado no login deve ser persistido para chamadas assíncronas (ex.: e-mail pós-cadastro).
+ */
 class GoogleService
 {
+    /**
+     * Cliente configurado para o fluxo web da aplicação.
+     */
     public function getClient(): Client
     {
         $client = new Client;
@@ -27,11 +39,19 @@ class GoogleService
         return $client;
     }
 
+    /**
+     * URL de autorização para o usuário abrir no browser.
+     */
     public function getAuthUrl(): string
     {
         return $this->getClient()->createAuthUrl();
     }
 
+    /**
+     * Troca o `code` do callback por tokens e monta DTO com identificador Google, e-mail e payload para persistir.
+     *
+     * @throws RuntimeException se o Google devolver erro no token ou userinfo é inválido.
+     */
     public function getUserByCode(string $code): GoogleUserDTO
     {
         $client = $this->getClient();
@@ -60,6 +80,13 @@ class GoogleService
         );
     }
 
+    /**
+     * Recupera o e-mail via userinfo usando o token OAuth já salvo (requisito: lib oficial + token persistido).
+     *
+     * Tenta refresh se o access token estiver expirado; retorna null se impossível ou em falha de rede/API.
+     *
+     * @param  array<string, mixed>|null  $token  Mesmo formato retornado por `fetchAccessTokenWithAuthCode`
+     */
     public function getEmailFromStoredToken(?array $token): ?string
     {
         if ($token === null || $token === []) {
@@ -88,7 +115,7 @@ class GoogleService
 
             return $googleUser->email ?? null;
         } catch (Throwable $e) {
-            Log::warning('Google user info error: ', ['message' => $e->getMessage()]);
+            Log::warning('Google userinfo falhou.', ['message' => $e->getMessage()]);
 
             return null;
         }
