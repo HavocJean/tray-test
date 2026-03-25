@@ -172,5 +172,6 @@ tray-test/
 - **Token opaco (`api_token`)** após OAuth em vez de expor ID interno ao front. (Ideal seria utilizar um JWT token por exemplo)
 - **Service + Repository** para regras e persistência.
 - **Fila Redis** para e-mail pós-cadastro, para envio assíncrono.
+- **E-mail simples (Blade) + `MAIL_MAILER=log`** template no Blade e envio “fake” registrado no log do Laravel durante desenvolvimento.
 - **Filtros** com índices em `name` e `cpf` e paginação obrigatória para suportar grande volume de dados.
 - **Login** criado uma pagína fake de login apenas para ficar mais visual, o que foi desenvolvido é apenas o login com o google.
