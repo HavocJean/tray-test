@@ -60,22 +60,16 @@ docker compose exec app php artisan migrate
 
 ---
 
-## Frontend (Vue) — Docker 
+## Frontend (Vue) — Docker
 
+O serviço **`frontend`** sobe com `docker compose up -d`
 
 - **URL:** `http://localhost:5173`
-- Chamadas a `/api` no browser são **proxied pelo Vite** para o serviço `nginx` na rede interna (`VITE_API_PROXY=http://nginx:80` no `docker-compose`), sem CORS extra para o fluxo normal.
-
-Logs:
-
-```bash
-docker compose logs -f frontend
-```
-
-Reinstalar dependências após mudar `package.json`:
+- O Vite faz **proxy** de `/api` para o serviço **`nginx`** na rede Docker (`VITE_API_PROXY=http://nginx:80`), assim o browser fala só com a porta 5173 no fluxo normal.
 
 ```bash
 docker compose exec frontend npm install
+docker compose logs -f frontend
 ```
 
 ## Frontend — máquina local (sem container)
@@ -87,7 +81,7 @@ npm run dev
 ```
 
 - App: `http://localhost:5173`
-- O proxy do Vite usa por padrão `http://127.0.0.1:8000` (API no host). Opcional: `VITE_API_PROXY=http://127.0.0.1:8000 npm run dev`
+- O proxy do Vite usa por padrão `http://127.0.0.1:8000` (API no host)
 
 ---
 
@@ -179,4 +173,4 @@ tray-test/
 - **Service + Repository** para regras e persistência.
 - **Fila Redis** para e-mail pós-cadastro, para envio assíncrono.
 - **Filtros** com índices em `name` e `cpf` e paginação obrigatória para suportar grande volume de dados.
-- **Login** criado uma fake página de login apenas para ficar mais visual, o que foi desenvolvido é apenas o login com o google
+- **Login** criado uma pagína fake de login apenas para ficar mais visual, o que foi desenvolvido é apenas o login com o google.
